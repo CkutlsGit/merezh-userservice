@@ -2,8 +2,10 @@ package ru.merezh.userservice.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.merezh.userservice.dto.UserDto;
 import ru.merezh.userservice.dto.UserFormDto;
+import ru.merezh.userservice.dto.UserLoginFormDto;
 import ru.merezh.userservice.entity.User;
 import ru.merezh.userservice.exception.UserException;
 import ru.merezh.userservice.repository.UserRepository;
@@ -17,6 +19,7 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    @Transactional
     public UserDto createUser(UserFormDto userFormDto) {
         if (userRepository.existsUserByEmail(userFormDto.email())) {
             throw new UserException("Почта уже занята");
@@ -38,7 +41,8 @@ public class UserService {
         );
     }
 
-    public UserDto validateUser(String email, String hashPassword) {
+    @Transactional(readOnly = true)
+    public UserDto validateUser(UserLoginFormDto userLoginFormDto) {
         User user = userRepository.findUserByEmailAndHashPassword(email, hashPassword)
                 .orElseThrow(() -> new UserException("Неверный логин или пароль"));
 
@@ -48,6 +52,7 @@ public class UserService {
         );
     }
 
+    @Transactional(readOnly = true)
     public List<UserDto> getAllUsers() {
         return userRepository.findAll()
                 .stream()
@@ -58,6 +63,7 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public UserDto getUserById(long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserException("Пользователя не существует"));
@@ -68,6 +74,7 @@ public class UserService {
         );
     }
 
+    @Transactional
     public String deleteUserById(long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserException("Пользователя не существует"));

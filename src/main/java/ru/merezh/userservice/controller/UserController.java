@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.merezh.userservice.dto.UserDto;
 import ru.merezh.userservice.dto.UserFormDto;
+import ru.merezh.userservice.dto.UserLoginFormDto;
 import ru.merezh.userservice.service.UserService;
 
 import java.util.List;
@@ -27,13 +28,13 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<UserDto> createUser(UserFormDto createData) {
+    public ResponseEntity<UserDto> createUser(@RequestBody UserFormDto createData) {
         return ResponseEntity.ok().body(userService.createUser(createData));
     }
 
     @PostMapping("/validate")
-    public ResponseEntity<UserDto> validateUser(String email, String hashPassword) {
-        return ResponseEntity.ok().body(userService.validateUser(email, hashPassword));
+    public ResponseEntity<UserDto> validateUser(@RequestBody UserLoginFormDto validateData) {
+        return ResponseEntity.ok().body(userService.validateUser(validateData));
     }
 
     @DeleteMapping("/{id}")
