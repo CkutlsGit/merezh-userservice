@@ -6,7 +6,7 @@ import ru.merezh.userservice.entity.User;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-    Optional<User> findUserByEmailAndHashPassword(String email, String hashPassword);
+    Optional<User> findUserByEmail(String email);
     boolean existsUserByEmail(String email);
     boolean existsUserByLogin(String login);
 }
