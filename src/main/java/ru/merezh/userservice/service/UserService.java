@@ -1,6 +1,8 @@
 package ru.merezh.userservice.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.merezh.userservice.dto.UserDto;
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public UserDto createUser(UserFormDto userFormDto) {
@@ -43,8 +46,12 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public UserDto validateUser(UserLoginFormDto userLoginFormDto) {
-        User user = userRepository.findUserByEmailAndHashPassword(email, hashPassword)
-                .orElseThrow(() -> new UserException("Неверный логин или пароль"));
+        User user = userRepository.findUserByEmail(userLoginFormDto.email())
+                .orElseThrow(() -> new UserException("Пользователь не существует", HttpStatus.NOT_FOUND));
+
+        if (!passwordEncoder.matches(userLoginFormDto.password(), user.getHashPassword())) {
+            throw new UserException("Неверные данные", HttpStatus.BAD_REQUEST);
+        }
 
         return new UserDto(
                 user.getId(),
@@ -66,7 +73,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserDto getUserById(long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserException("Пользователя не существует"));
+                .orElseThrow(() -> new UserException("Пользователя не существует", HttpStatus.NOT_FOUND));
 
         return new UserDto(
                 user.getId(),
@@ -77,7 +84,7 @@ public class UserService {
     @Transactional
     public String deleteUserById(long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserException("Пользователя не существует"));
+                .orElseThrow(() -> new UserException("Пользователя не существует", HttpStatus.NOT_FOUND));
 
         userRepository.delete(user);
 
