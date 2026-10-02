@@ -2,6 +2,8 @@
 
 Microservice responsible for storing and managing users.
 
+📖 In Russian: [перевод на русский](https://github.com/CkutlsGit/merezh-userservice/blob/main/README.ru.md)
+
 ---
 
 ## 📋 Overview
