@@ -69,6 +69,7 @@ docker compose up --build
 ```
 
 Сервис будет доступен на порту **8080**.
+Swagger путь - /swagger-ui.html
 
 ## 📚 Эндпоинты API
 
