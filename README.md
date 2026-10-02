@@ -75,6 +75,7 @@ docker compose up --build
 ```
 
 The service will be available on port **8080**.
+Swagger path - /swagger-ui.html
 ---
 
 ## 📚 API Endpoints
