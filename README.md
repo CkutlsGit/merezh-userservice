@@ -22,7 +22,7 @@ and exposes a validation endpoint used by Auth Service.
 
 **Backend**
 - Java 21 - core language
-- Spring Boot 3 - application framework
+- Spring Boot 4 - application framework
 - Spring Data JPA - database access and ORM
 - Spring Security Crypto - BCrypt password encoder
 
